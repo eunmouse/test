@@ -1,7 +1,5 @@
 package shop.mtcoding.codingtest.user;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,11 +13,11 @@ public class UserController {
     private final UserService userService;
 
     // user 등록 API 구현
-    //`/users` API를 호출하면, `[{"id": 1}, {"id": 2}]`을 응답한다.
+    //`/users` API를 호출하면, `{"id": 1}`을 응답한다.
     @PostMapping("/users")
-    public ResponseEntity<?> save(@Valid User user, Error errors) {
-        userService.유저등록(user);
-        return ResponseEntity.ok(Resp.ok(user));
+    public ResponseEntity<?> save(@Valid UserRequest.saveDTO saveDTO, Error errors) {
+        UserResponse.DTO userDTO = userService.유저등록(saveDTO);
+        return ResponseEntity.ok(Resp.ok(userDTO));
     }
 
     // user 조회 API 구현

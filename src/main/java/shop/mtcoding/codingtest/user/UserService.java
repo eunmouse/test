@@ -15,15 +15,19 @@ public class UserService {
     private final UserRepository userRepository;
 
     @Transactional
-    public void 유저등록(User user) {
+    public UserResponse.DTO 유저등록(UserRequest.saveDTO saveDTO) {
         // 1. 유저 존재 유무 확인
         // 유저가 존재하면 유효성 검사 실패 Exception 400
-        User userPS = userRepository.findById(user.getId());
-        if (userPS != null) {
+        try {
+            User userPS = userRepository.findById(saveDTO.getId());
             throw new Exception400("이미 존재하는 유저입니다.");
+        } catch (Exception e) { // No Result
+            // 2. 유저 등록
+            userRepository.save(saveDTO.toEntity());
+            // 3. 등록한 데이터 리턴
+            User user = userRepository.findById(saveDTO.getId());
+            return new UserResponse.DTO(user);
         }
-        // 2. 유저 등록
-        userRepository.save(user);
     }
 
     public User 유저한명조회(int id) {
